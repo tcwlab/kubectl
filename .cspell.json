@@ -1,0 +1,29 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/vscode-extension/**",
+    "**/.git/**",
+    ".vscode",
+    "package-lock.json",
+    "report"
+  ],
+  "words": [
+    "DOCKERFILELINT",
+    "DOCKERHUB",
+    "GOSS",
+    "HADOLINT",
+    "Roadmap",
+    "Sascha",
+    "Willomitzer",
+    "Wlab",
+    "aelsabbahy",
+    "automagically",
+    "dgoss",
+    "goss",
+    "tcwlab",
+    "kubectl",
+    "kustomize"
+  ]
+}
