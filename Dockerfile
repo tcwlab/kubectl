@@ -2,7 +2,7 @@
 # STEP 1: build base image
 #####
 FROM alpine:3.15 AS base
-RUN apk add -U --no-cache bash && \
+RUN apk add -U --no-cache bash coreutils git && \
     apk upgrade && \
     rm -rf /var/cache/apk/*
 
@@ -26,4 +26,12 @@ RUN apk add -U --no-cache wget curl && \
 #####
 FROM base AS release
 COPY --from=dependencies /usr/bin /usr/bin
-CMD ["sh"]
+RUN addgroup -S kubeusr && adduser -S kubeusr -G kubeusr
+COPY /entrypoint.sh /home/kubeusr/entrypoint.sh
+RUN chmod +x /home/kubeusr/entrypoint.sh && \
+    mkdir /home/kubeusr/.kube && \
+    chown -R kubeusr:kubeusr /home/kubeusr
+USER kubeusr
+VOLUME ["/home/kubeusr/.kube"]
+CMD /bin/bash
+ENTRYPOINT /home/kubeusr/entrypoint.sh
