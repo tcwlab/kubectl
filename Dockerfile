@@ -27,11 +27,11 @@ RUN apk add -U --no-cache wget curl && \
 FROM base AS release
 COPY --from=dependencies /usr/bin /usr/bin
 RUN addgroup -S kubeusr && adduser -S kubeusr -G kubeusr
-COPY /entrypoint.sh /home/kubeusr/entrypoint.sh
-RUN chmod +x /home/kubeusr/entrypoint.sh && \
+COPY /entrypoint.sh /usr/bin/entrypoint.sh
+RUN chmod +x /usr/bin/entrypoint.sh && \
     mkdir /home/kubeusr/.kube && \
     chown -R kubeusr:kubeusr /home/kubeusr
 USER kubeusr
 VOLUME ["/home/kubeusr/.kube"]
 CMD /bin/bash
-ENTRYPOINT /home/kubeusr/entrypoint.sh
+ENTRYPOINT /usr/bin/entrypoint.sh
