@@ -10,7 +10,8 @@ RUN apk add -U --no-cache bash coreutils git && \
 # STEP 2: install dependencies
 #####
 FROM base AS dependencies
-RUN apk add -U --no-cache wget curl && \
+RUN set -eo pipefail && \
+    apk add -U --no-cache wget curl && \
     wget -q "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" -O /usr/bin/kubectl && \
     chmod +rx /usr/bin/kubectl && \
     wget -q $(curl -s "https://api.github.com/repos/kubernetes-sigs/kustomize/releases" | grep "browser_download.*linux_amd64" | cut -d '"' -f 4 | sort -V | tail -n 1) -O kustomize.tgz && \
@@ -33,5 +34,4 @@ RUN chmod +x /usr/bin/entrypoint.sh && \
     chown -R kubeusr:kubeusr /home/kubeusr
 USER kubeusr
 VOLUME ["/home/kubeusr/.kube"]
-CMD /bin/bash
 ENTRYPOINT /usr/bin/entrypoint.sh
