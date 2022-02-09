@@ -10,14 +10,14 @@ RUN apk add -U --no-cache bash coreutils git && \
 # STEP 2: install dependencies
 #####
 FROM base AS dependencies
-RUN set -eo pipefail && \
-    apk add -U --no-cache curl && \
-    curl -Ls "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" -o /usr/bin/kubectl && \
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN apk add -U --no-cache curl && \
+    curl -Ls 'https://dl.k8s.io/release/'"$(curl -L -s https://dl.k8s.io/release/stable.txt)"'/bin/linux/amd64/kubectl' -o /usr/bin/kubectl && \
     chmod +rx /usr/bin/kubectl && \
-    curl -Ls $(curl -s "https://api.github.com/repos/kubernetes-sigs/kustomize/releases" | grep "browser_download.*linux_amd64" | cut -d '"' -f 4 | sort -V | tail -n 1) -o kustomize.tgz && \
+    curl -Ls "$(curl -s 'https://api.github.com/repos/kubernetes-sigs/kustomize/releases' | grep 'browser_download.*linux_amd64' | cut -d '\"' -f 4 | sort -V | tail -n 1)" -o kustomize.tgz && \
     tar xzf kustomize.tgz -C /usr/bin && \
     chmod +rx /usr/bin/kustomize && \
-    curl -Ls "https://get.helm.sh/helm-$(curl -s "https://api.github.com/repos/helm/helm/releases" | grep "tag_name" | cut -d '"' -f 4 | sort -V | grep -v "rc." | tail -n 1)-linux-amd64.tar.gz" -o helm.tgz && \
+    curl -Ls 'https://get.helm.sh/helm-'"$(curl -s 'https://api.github.com/repos/helm/helm/releases' | grep 'tag_name' | cut -d '\"' -f 4 | sort -V | grep -v 'rc.' | tail -n 1)"'-linux-amd64.tar.gz' -o helm.tgz && \
     tar xzf helm.tgz && \
     mv linux-amd64/helm /usr/bin/helm && \
     chmod +rx /usr/bin/helm
