@@ -45,21 +45,6 @@ docker-build:
     - main
     - tags
 
-validate-image:
-  stage: test
-  image: tcwlab/dgoss:latest
-  tags:
-    - docker
-    - linux
-  variables:
-    GOSS_FILES_PATH: goss
-    GOSS_FILES_STRATEGY: cp
-  script:
-    - dgoss run -it $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-  except:
-    - main
-    - tags
-
 semantic-release:
   stage: release
   image: tcwlab/semantic-release:latest
