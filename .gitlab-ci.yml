@@ -50,6 +50,7 @@ docker-scan:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PUSH_TOKEN"
+    - apk add curl
     - mkdir -p ~/.docker/cli-plugins
     - curl https://github.com/docker/scan-cli-plugin/releases/latest/download/docker-scan_linux_amd64 -L -s -S -o ~/.docker/cli-plugins/docker-scan
     - chmod +x ~/.docker/cli-plugins/docker-scan
