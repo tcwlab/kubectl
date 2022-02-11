@@ -2,7 +2,7 @@
 
 ## tl;dr
 
-This image contains `kubectl`, `kustomize` and `helm` all-in-one alpine image.
+This image contains `kubectl`, `kustomize` running on alpine. Every image contains the latest stable version of both tools at build time.
 The goal is to make CI/CD tasks as easy as possible.
 We only set up this project, because all other projects we found 'in the wild' seems to be somehow orphaned.
 
@@ -15,7 +15,6 @@ We only set up this project, because all other projects we found 'in the wild' s
 - **Documentation:**
   - `kubectl`: [see reference](https://kubectl.docs.kubernetes.io/references/kubectl/)
   - `kustomize`: [SIG documentation](https://kubectl.docs.kubernetes.io/references/kustomize/)
-  - `helm`: [official documentation](https://helm.sh/docs/)
   - How everything works together: <https://kubectl.docs.kubernetes.io/>
 
 ## Getting started
@@ -35,14 +34,14 @@ docker run -v ~/.kube:/.kube tcwlab/kubectl:latest kubectl get no
 ```
 or in interactive mode:
 ```bash
-docker run -it --rm -v ~/.kube:/.kube test:1 /bin/bash
+docker run -it --rm -v ~/.kube:/.kube tcwlab/kubectl:latest /bin/bash
 ```
 
 #### Using only one specific `kubeconfig`
 Instead of mounting all your kubeconfigs to the container, you could also only set one specific
 config as environment variable:
 ```bash
-docker run -e KUBE_CONFIG_B64="$(base64 -i ~/.kube/config)" test:1 kubectl get no
+docker run -e KUBE_CONFIG_B64="$(base64 -i ~/.kube/config)" tcwlab/kubectl:latest kubectl get no
 ```
 
 ### Using as CI/CD image
