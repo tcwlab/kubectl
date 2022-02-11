@@ -4,6 +4,7 @@
 
 This image contains `kubectl`, `kustomize` and `helm` all-in-one alpine image.
 The goal is to make CI/CD tasks as easy as possible.
+We only set up this project, because all other projects we found 'in the wild' seems to be somehow orphaned.
 
 ## Quick reference
 
@@ -19,7 +20,46 @@ The goal is to make CI/CD tasks as easy as possible.
 
 ## Getting started
 
-TBD
+This image is intended to be used both locally _and_ as a part of a pipeline.
+Find the steps how to use it below, depending on your needs.
+
+### Using it locally
+
+#### Using `~/.kube` as volume
+We thought it would be easy to just mount all of your kubernetes configs inside the container,
+so that you can easily interact with it.
+It's as easy as calling:
+
+```bash
+docker run -v ~/.kube:/.kube tcwlab/kubectl:latest kubectl get no
+```
+or in interactive mode:
+```bash
+docker run -it --rm -v ~/.kube:/.kube test:1 /bin/bash
+```
+
+#### Using only one specific `kubeconfig`
+Instead of mounting all your kubeconfigs to the container, you could also only set one specific 
+config as environment variable:
+```bash
+docker run -e KUBE_CONFIG_B64="$(base64 -i ~/.kube/config)" test:1 kubectl get no
+```
+
+### Using as CI/CD image
+As we are using GitLab ourselves, this only describes the GitLab CI/CD way, 
+using this `.gitlab-ci.yml` snippet: 
+
+```yaml
+k8s-example:
+  stage: demo
+  image: tcwlab/kubectl:latest
+  variables:
+    KUBE_CONFIG_B64: $YOUR_ENV_VAR_CONTAINING_B64_KUBECONFIG
+  script:
+    - kubectl get nodes
+```
+
+If you'd like to see some example configurations, have a look at our [bootstrap project](https://gitlab.com/tcwlab.com/saas/baseline/bootstrap/-/blob/main/.gitlab-ci.yml).
 
 ## Roadmap
 If you are interested in the upcoming/planned features, ideas and milestones,
@@ -35,4 +75,3 @@ A lot of updates will be done "automagically".
 We do **not** have a specific dedicated set of people to work on this project.
 
 It absolutely comes with **no warranty**.
-

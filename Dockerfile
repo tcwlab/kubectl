@@ -30,8 +30,10 @@ COPY --from=dependencies /usr/bin /usr/bin
 RUN addgroup -S kubeusr && adduser -S kubeusr -G kubeusr
 COPY /entrypoint.sh /usr/bin/entrypoint.sh
 RUN chmod +x /usr/bin/entrypoint.sh && \
-    mkdir /home/kubeusr/.kube && \
-    chown -R kubeusr:kubeusr /home/kubeusr
+    mkdir /.kube && \
+    ln -s /.kube /home/kubeusr/.kube && \
+    chown -R kubeusr:kubeusr /home/kubeusr && \
+    chown -R kubeusr:kubeusr /.kube
 USER kubeusr
-VOLUME ["/home/kubeusr/.kube"]
+VOLUME ["/.kube"]
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
