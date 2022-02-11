@@ -16,7 +16,7 @@ RUN apk add -U --no-cache curl && \
     chmod +rx /usr/bin/kubectl && \
     curl -Ls "$(curl -s 'https://api.github.com/repos/kubernetes-sigs/kustomize/releases' | grep 'browser_download.*linux_amd64' | cut -d '"' -f 4 | sort -V | tail -n 1)" -o kustomize.tgz && \
     tar xzf kustomize.tgz -C /usr/bin && \
-    chmod +rx /usr/bin/kustomize \
+    chmod +rx /usr/bin/kustomize
 
 #####
 # STEP 3: build production image
