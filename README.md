@@ -39,15 +39,15 @@ docker run -it --rm -v ~/.kube:/.kube test:1 /bin/bash
 ```
 
 #### Using only one specific `kubeconfig`
-Instead of mounting all your kubeconfigs to the container, you could also only set one specific 
+Instead of mounting all your kubeconfigs to the container, you could also only set one specific
 config as environment variable:
 ```bash
 docker run -e KUBE_CONFIG_B64="$(base64 -i ~/.kube/config)" test:1 kubectl get no
 ```
 
 ### Using as CI/CD image
-As we are using GitLab ourselves, this only describes the GitLab CI/CD way, 
-using this `.gitlab-ci.yml` snippet: 
+As we are using GitLab ourselves, this only describes the GitLab CI/CD way,
+using this `.gitlab-ci.yml` snippet:
 
 ```yaml
 k8s-example:

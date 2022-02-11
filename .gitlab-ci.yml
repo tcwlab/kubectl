@@ -69,4 +69,3 @@ semantic-release:
       - main
   except:
     - tags
-
