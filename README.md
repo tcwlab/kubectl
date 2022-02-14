@@ -1,4 +1,9 @@
 # `kubectl`
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ftcwlab%2Fkubectl.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Ftcwlab%2Fkubectl?ref=badge_shield)
+[![pipeline status](https://gitlab.com/tcwlab.com/saas/baseline/images/kubectl/badges/main/pipeline.svg)](https://gitlab.com/tcwlab.com/saas/baseline/images/kubectl/-/commits/main)
+[![coverage report](https://gitlab.com/tcwlab.com/saas/baseline/images/kubectl/badges/main/coverage.svg)](https://gitlab.com/tcwlab.com/saas/baseline/images/kubectl/-/commits/main)
+[![GitHub tag](https://img.shields.io/github/tag/tcwlab/kubectl)](https://github.com/tcwlab/kubectl/releases/?include_prereleases&sort=semver "View GitHub releases")
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## tl;dr
 
@@ -74,3 +79,5 @@ A lot of updates will be done "automagically".
 We do **not** have a specific dedicated set of people to work on this project.
 
 It absolutely comes with **no warranty**.
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ftcwlab%2Fkubectl.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Ftcwlab%2Fkubectl?ref=badge_large)
