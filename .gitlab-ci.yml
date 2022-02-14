@@ -1,7 +1,6 @@
 stages:
   - lint
   - build
-  - test
   - release
 
 mega-linter:
