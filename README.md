@@ -73,7 +73,7 @@ please have a look at our [board](https://gitlab.com/tcwlab.com/saas/baseline/im
 This project is licensed under [Apache License v2](./LICENSE).
 
 ## Project status
-This project is maintained "best effort", which means, we strive for automation as much as we can
+This project is maintained "best effort", which means, we strive for automation as much as we can.
 A lot of updates will be done "automagically".
 
 We do **not** have a specific dedicated set of people to work on this project.
