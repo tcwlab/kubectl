@@ -3,7 +3,7 @@
 [![pipeline status](https://gitlab.com/tcwlab.com/saas/baseline/images/kubectl/badges/main/pipeline.svg)](https://gitlab.com/tcwlab.com/saas/baseline/images/kubectl/-/commits/main)
 [![coverage report](https://gitlab.com/tcwlab.com/saas/baseline/images/kubectl/badges/main/coverage.svg)](https://gitlab.com/tcwlab.com/saas/baseline/images/kubectl/-/commits/main)
 [![GitHub tag](https://img.shields.io/github/tag/tcwlab/kubectl)](https://github.com/tcwlab/kubectl/releases/?include_prereleases&sort=semver "View GitHub releases")
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://bit.ly/38aYloo)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)]
 
 ## tl;dr
 
