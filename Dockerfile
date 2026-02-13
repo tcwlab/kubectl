@@ -1,7 +1,9 @@
 #####
 # STEP 1: build base image
 #####
-FROM alpine:3 AS base
+FROM --platform=$BUILDPLATFORM alpine:3 AS base
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
 RUN apk add -U --no-cache bash coreutils git && \
     apk upgrade && \
     rm -rf /var/cache/apk/*
@@ -12,9 +14,15 @@ RUN apk add -U --no-cache bash coreutils git && \
 FROM base AS dependencies
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN apk add -U --no-cache curl && \
-    curl -Ls 'https://dl.k8s.io/release/'"$(curl -L -s https://dl.k8s.io/release/stable.txt)"'/bin/linux/amd64/kubectl' -o /usr/bin/kubectl && \
+    case "$(apk --print-arch)" in \
+        aarch64) export LOCAL_ARCH="arm64" ;; \
+        x86_64) export LOCAL_ARCH="amd64" ;; \
+    esac; \
+    export K8S_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt) && \
+    curl -Ls 'https://dl.k8s.io/release/'"$(curl -L -s https://dl.k8s.io/release/stable.txt)"'/bin/linux/'"${LOCAL_ARCH}"'/kubectl' -o /usr/bin/kubectl && \
     chmod +rx /usr/bin/kubectl && \
-    curl -Ls "$(curl -s 'https://api.github.com/repos/kubernetes-sigs/kustomize/releases' | grep 'browser_download.*linux_amd64' | cut -d '"' -f 4 | sort -V | tail -n 1)" -o kustomize.tgz && \
+    KUSTOMIZE_URL=$(curl -s 'https://api.github.com/repos/kubernetes-sigs/kustomize/releases' | grep 'browser_download.*linux_' | grep "${LOCAL_ARCH}" | cut -d '"' -f 4 | sort -V | tail -n 1) && \
+    curl -Ls ${KUSTOMIZE_URL} -o kustomize.tgz && \
     tar xzf kustomize.tgz -C /usr/bin && \
     chmod +rx /usr/bin/kustomize
 
