@@ -16,6 +16,7 @@
     "HADOLINT",
     "JSONLINT",
     "KUBE",
+    "SHORTVERSION",
     "Roadmap",
     "Sascha",
     "Willomitzer",
@@ -39,6 +40,8 @@
     "pipefail",
     "saas",
     "tcwlab",
-    "venv"
+    "venv",
+    "esac",
+    "buildx"
   ]
 }
