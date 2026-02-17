@@ -1,28 +1,29 @@
 stages:
-  #- lint
+  - lint
   - build
   - release
   - publish
 
-#mega-linter:
-#  stage: lint
-#  image: oxsecurity/megalinter:v9@sha256:b38439f4563ac9400cd9e1833b428848f66bb0a0f1c531506a701479b80ded24
-#  tags:
-#    - docker
-#    - linux
-#  script: ["true"]
-#  variables:
-#    # All available variables are described in documentation
-#    # https://megalinter.io/latest/configuration/
-#    DEFAULT_WORKSPACE: $CI_PROJECT_DIR
-#  artifacts:
-#    when: always
-#    paths:
-#      - report
-#    expire_in: 1 week
-#  except:
-#    - main
-#    - tags
+mega-linter:
+  stage: lint
+  image: oxsecurity/megalinter:v9@sha256:b38439f4563ac9400cd9e1833b428848f66bb0a0f1c531506a701479b80ded24
+  tags:
+    - docker
+    - linux
+  script: ["true"]
+  variables:
+    # All available variables are described in documentation
+    # https://megalinter.io/latest/configuration/
+    DEFAULT_WORKSPACE: $CI_PROJECT_DIR
+  artifacts:
+    when: always
+    paths:
+      - report
+    expire_in: 1 week
+  allow_failure: true
+  except:
+    - main
+    - tags
 
 docker-build:
   stage: build
@@ -50,7 +51,7 @@ semantic-release:
     - semantic-release
   artifacts:
     paths:
-      - .VERSION
+      - .NEXT_RELEASE_VERSION
     expire_in: 2 hours
   only:
     refs:
@@ -68,7 +69,7 @@ docker-push:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker login -u "$DOCKERHUB_CI_REGISTRY_USER" -p "$DOCKERHUB_CI_REGISTRY_PASSWORD" $DOCKERHUB_CI_REGISTRY
   script: |
-          SEMANTIC_VERSION=$(cat .VERSION)
+          SEMANTIC_VERSION=$(cat .NEXT_RELEASE_VERSION)
           SEMANTIC_VERSION_MAJOR=$(echo $SEMANTIC_VERSION | cut -d '.' -f1)
           SEMANTIC_VERSION_MINOR=$(echo $SEMANTIC_VERSION | cut -d '.' -f2)
           SEMANTIC_SHORTVERSION=$SEMANTIC_VERSION_MAJOR.$SEMANTIC_VERSION_MINOR
