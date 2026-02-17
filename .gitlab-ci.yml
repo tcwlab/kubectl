@@ -40,36 +40,6 @@ docker-build:
   except:
     - tags
 
-docker-push:
-  stage: publish
-  image: docker:latest@sha256:8bcbad4b45f0bff9d3e809d85a7ac589390f0be8acbc526850c998c35c1243fd
-  tags:
-    - docker
-    - linux
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-  script: |
-          SEMANTIC_VERSION=$(echo $CI_COMMIT_TAG | cut -d 'v' -f2)
-          SEMANTIC_VERSION_MAJOR=$(echo $SEMANTIC_VERSION | cut -d '.' -f1)
-          SEMANTIC_VERSION_MINOR=$(echo $SEMANTIC_VERSION | cut -d '.' -f2)
-          SEMANTIC_SHORTVERSION=$SEMANTIC_VERSION_MAJOR.$SEMANTIC_VERSION_MINOR
-          echo "Running on branch $CI_COMMIT_BRANCH with tag = $CI_COMMIT_SHORT_SHA"
-          docker pull "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
-          echo "Pushing image '$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA' to docker registry"
-          docker tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" "$CI_REGISTRY_IMAGE:$SEMANTIC_VERSION"
-          docker tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" "$CI_REGISTRY_IMAGE:$SEMANTIC_SHORTVERSION"
-          docker tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" "$CI_REGISTRY_IMAGE:$SEMANTIC_VERSION_MAJOR"
-          docker tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" "$CI_REGISTRY_IMAGE:latest"
-          docker push "$CI_REGISTRY_IMAGE:$SEMANTIC_VERSION"
-          docker push "$CI_REGISTRY_IMAGE:$SEMANTIC_SHORTVERSION"
-          docker push "$CI_REGISTRY_IMAGE:$SEMANTIC_VERSION_MAJOR"
-          docker push "$CI_REGISTRY_IMAGE:latest"
-  only:
-    refs:
-      - main
-  except:
-    - tags
-
 semantic-release:
   stage: release
   image: tcwlab/semantic-release:1
@@ -78,6 +48,41 @@ semantic-release:
     - linux
   script:
     - semantic-release
+  artifacts:
+    paths:
+      - .VERSION
+    expire_in: 2 hours
+  only:
+    refs:
+      - main
+  except:
+    - tags
+
+docker-push:
+  stage: publish
+  image: docker:latest@sha256:8bcbad4b45f0bff9d3e809d85a7ac589390f0be8acbc526850c998c35c1243fd
+  tags:
+    - docker
+    - linux
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker login -u "$DOCKERHUB_CI_REGISTRY_USER" -p "$DOCKERHUB_CI_REGISTRY_PASSWORD" $DOCKERHUB_CI_REGISTRY
+  script: |
+          SEMANTIC_VERSION=$(cat .VERSION)
+          SEMANTIC_VERSION_MAJOR=$(echo $SEMANTIC_VERSION | cut -d '.' -f1)
+          SEMANTIC_VERSION_MINOR=$(echo $SEMANTIC_VERSION | cut -d '.' -f2)
+          SEMANTIC_SHORTVERSION=$SEMANTIC_VERSION_MAJOR.$SEMANTIC_VERSION_MINOR
+          echo "Running on branch $CI_COMMIT_BRANCH with tag = $CI_COMMIT_SHORT_SHA"
+          docker pull "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+          echo "Pushing image '$DOCKERHUB_CI_REGISTRY_IMAGE:$DOCKERHUB_CI_COMMIT_SHORT_SHA' to docker registry"
+          docker tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" "$DOCKERHUB_CI_REGISTRY_IMAGE:$SEMANTIC_VERSION"
+          docker tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" "$DOCKERHUB_CI_REGISTRY_IMAGE:$SEMANTIC_SHORTVERSION"
+          docker tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" "$DOCKERHUB_CI_REGISTRY_IMAGE:$SEMANTIC_VERSION_MAJOR"
+          docker tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" "$DOCKERHUB_CI_REGISTRY_IMAGE:latest"
+          docker push "$DOCKERHUB_CI_REGISTRY_IMAGE:$SEMANTIC_VERSION"
+          docker push "$DOCKERHUB_CI_REGISTRY_IMAGE:$SEMANTIC_SHORTVERSION"
+          docker push "$DOCKERHUB_CI_REGISTRY_IMAGE:$SEMANTIC_VERSION_MAJOR"
+          docker push "$DOCKERHUB_CI_REGISTRY_IMAGE:latest"
   only:
     refs:
       - main
