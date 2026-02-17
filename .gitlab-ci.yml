@@ -1,6 +1,7 @@
 stages:
   - lint
   - build
+  - test
   - release
   - publish
 
@@ -39,6 +40,21 @@ docker-build:
     - echo "Pushing image '$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA' to docker registry"
     - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
   except:
+    - tags
+
+validate-image:
+  stage: test
+  image: tcwlab/dgoss:1
+  tags:
+    - docker
+    - linux
+  variables:
+    GOSS_FILES_PATH: goss
+    GOSS_FILES_STRATEGY: cp
+  script:
+    - dgoss run -e KUBE_CONFIG_B64="YXBpVmVyc2lvbjogdjEKa2luZDogQ29uZmlnCmNsdXN0ZXJzOiBbXQp1c2VyczogW10KY29udGV4dHM6IFtdCmN1cnJlbnQtY29udGV4dDogJycK" -it $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  except:
+    - main
     - tags
 
 semantic-release:

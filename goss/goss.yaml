@@ -1,0 +1,26 @@
+file:
+  /usr/bin/kubectl:
+    exists: true
+    filetype: symlink
+  /usr/bin/kustomize:
+    exists: true
+    filetype: symlink
+command:
+  kubectl:
+    exit-status: 1
+    exec: "kubectl version"
+    stdout:
+      - "Client Version: v"
+      - "Kustomize Version: v"
+    stderr:
+      - "The connection to the server localhost:8080 was refused - did you specify the right host or port?"
+    timeout: 10000 # in milliseconds
+    skip: false
+  kustomize:
+    exit-status: 0
+    exec: "kubectl version"
+    stdout:
+      - "v"
+    stderr: []
+    timeout: 10000 # in milliseconds
+    skip: false
