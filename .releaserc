@@ -2,5 +2,7 @@ plugins:
   - "@semantic-release/commit-analyzer"
   - "@semantic-release/release-notes-generator"
   - "@semantic-release/gitlab"
+  - - "@semantic-release/exec"
+    - verifyReleaseCmd: "echo ${nextRelease.version} > .NEXT_RELEASE_VERSION"
 branches:
   - "main"
