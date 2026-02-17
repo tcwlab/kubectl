@@ -2,6 +2,7 @@ stages:
   - lint
   - build
   - release
+  - publish
 
 mega-linter:
   stage: lint
@@ -37,11 +38,10 @@ docker-build:
     - echo "Pushing image '$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA' to docker registry"
     - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
   except:
-    - main
     - tags
 
 docker-push:
-  stage: release
+  stage: publish
   image: docker:latest@sha256:8bcbad4b45f0bff9d3e809d85a7ac589390f0be8acbc526850c998c35c1243fd
   tags:
     - docker
@@ -65,9 +65,10 @@ docker-push:
           docker push "$CI_REGISTRY_IMAGE:$SEMANTIC_VERSION_MAJOR"
           docker push "$CI_REGISTRY_IMAGE:latest"
   only:
-    - tags
+    refs:
+      - main
   except:
-    - branches
+    - tags
 
 semantic-release:
   stage: release
